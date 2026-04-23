@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import PatientCard from "@/components/PatientCard";
 import ConsultationCard from "@/components/ConsultationCard";
 import AlerteIA from "@/components/AlerteIA";
@@ -8,7 +7,7 @@ import LoginButton from "@/components/LoginButton";
 export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+
       <main className="p-8">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl font-bold text-gray-800">
