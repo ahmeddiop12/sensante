@@ -9,6 +9,7 @@ const liens = [
   { nom: "Consultations", href: "/consultations", icone: "C" },
   { nom: "Dashboard",     href: "/dashboard",     icone: "D" },
   { nom: "Profil",        href: "/profil",        icone: "U" },
+  { nom: "IA",            href: "/ia",            icone: "A" },
 ];
 
 export default function Sidebar() {
