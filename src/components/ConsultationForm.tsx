@@ -128,8 +128,23 @@ export default function ConsultationForm({
                 type="checkbox"
                 checked={symptomes.includes(s)}
                 onChange={() => toggleSymptome(s)}
+                className="accent-orange-500"
+              />
+              <span className="text-sm">{s}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Notes */}
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
+          Notes (optionnel)
         </label>
+        <textarea
+          name="notes"
           rows={3}
+          placeholder="Observations cliniques..."
           className="w-full p-3 border rounded-lg"
         />
       </div>
@@ -143,12 +158,4 @@ export default function ConsultationForm({
       </button>
     </form>
   );
-}          placeholder="Observations cliniques..."
-          name="notes"
-        <textarea
-                className="accent-orange-500"
-      {/* Notes */}
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Notes (optionnel)
-      <div>
-              />
+}
