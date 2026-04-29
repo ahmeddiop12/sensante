@@ -14,8 +14,9 @@ export default function PatientForm({
   ) {
     e.preventDefault();
     setLoading(true);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
 
-    const formData = new FormData(e.currentTarget);
     const data = {
       nom: formData.get("nom"),
       prenom: formData.get("prenom"),
@@ -33,7 +34,7 @@ export default function PatientForm({
     });
 
     if (res.ok) {
-      e.currentTarget.reset();
+      form.reset();
       onSuccess();
     }
     setLoading(false);
@@ -55,30 +56,54 @@ export default function PatientForm({
         Nouveau patient
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input name="nom" placeholder="Nom" required
-          className="p-3 border rounded-lg" />
-        <input name="prenom" placeholder="Prénom" required
-          className="p-3 border rounded-lg" />
-        <input name="dateNaissance" type="date" required
-          className="p-3 border rounded-lg" />
-        <select name="sexe" required
-          className="p-3 border rounded-lg">
+        <input
+          name="nom"
+          placeholder="Nom"
+          required
+          className="p-3 border rounded-lg text-gray-800 bg-white"
+        />
+        <input
+          name="prenom"
+          placeholder="Prénom"
+          required
+          className="p-3 border rounded-lg text-gray-800 bg-white"
+        />
+        <input
+          name="dateNaissance"
+          type="date"
+          required
+          className="p-3 border rounded-lg text-gray-800 bg-white"
+        />
+        <select
+          name="sexe"
+          required
+          className="p-3 border rounded-lg text-gray-800 bg-white"
+        >
           <option value="">Sexe</option>
           <option value="F">Femme</option>
           <option value="M">Homme</option>
         </select>
-        <input name="telephone" placeholder="Téléphone (optionnel)"
-          className="p-3 border rounded-lg" />
-        <select name="region" required
-          className="p-3 border rounded-lg">
+        <input
+          name="telephone"
+          placeholder="Téléphone (optionnel)"
+          className="p-3 border rounded-lg text-gray-800 bg-white"
+        />
+        <select
+          name="region"
+          required
+          className="p-3 border rounded-lg text-gray-800 bg-white"
+        >
           <option value="">Région</option>
           {regions.map((r) => (
             <option key={r} value={r}>{r}</option>
           ))}
         </select>
       </div>
-      <input name="adresse" placeholder="Adresse (optionnel)"
-        className="w-full p-3 border rounded-lg" />
+      <input
+        name="adresse"
+        placeholder="Adresse (optionnel)"
+        className="w-full p-3 border rounded-lg text-gray-800 bg-white"
+      />
       <button
         type="submit"
         disabled={loading}

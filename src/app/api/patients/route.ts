@@ -32,10 +32,11 @@ export async function POST(request: Request) {
       },
     });
     return NextResponse.json(patient, { status: 201 });
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Erreur lors de la création" },
-      { status: 500 }
-    );
-  }
+    } catch (error) {
+  console.error("Erreur POST patient:", error);
+  return NextResponse.json(
+    { error: String(error) },
+    { status: 500 }
+  );
+}
 }
