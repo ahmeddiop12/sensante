@@ -20,11 +20,30 @@ export default function PatientsPage() {
   const [loading, setLoading] = useState(true);
 
   async function chargerPatients() {
+  try {
+    setLoading(true);
     const res = await fetch("/api/patients");
     const data = await res.json();
-    setPatients(data);
+
+    // Vérification de sécurité :
+    // Si data est un tableau, on l'utilise. 
+    // Sinon, on cherche si les patients sont dans data.patients.
+    // Sinon, on met un tableau vide par défaut.
+    if (Array.isArray(data)) {
+      setPatients(data);
+    } else if (data && Array.isArray(data.patients)) {
+      setPatients(data.patients);
+    } else {
+      console.error("Format de données invalide :", data);
+      setPatients([]); 
+    }
+  } catch (error) {
+    console.error("Erreur lors du chargement :", error);
+    setPatients([]);
+  } finally {
     setLoading(false);
   }
+}
 
   useEffect(() => {
     chargerPatients();

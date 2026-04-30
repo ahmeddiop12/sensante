@@ -23,11 +23,33 @@ export default function ConsultationsPage() {
   const [loading, setLoading] = useState(true);
 
   async function charger() {
+  try {
+    // Vérifier la session avant de fetcher
+    const sessionRes = await fetch("/api/auth/session");
+    const session = await sessionRes.json();
+
+    if (!session?.user) {
+      console.error("Pas de session active");
+      setLoading(false);
+      return;
+    }
+
     const res = await fetch("/api/consultations");
     const data = await res.json();
-    setConsultations(data);
+
+    if (Array.isArray(data)) {
+      setConsultations(data);
+    } else {
+      console.error("Format invalide :", data);
+      setConsultations([]);
+    }
+  } catch (error) {
+    console.error("Erreur :", error);
+    setConsultations([]);
+  } finally {
     setLoading(false);
   }
+}
 
   useEffect(() => {
     charger();

@@ -13,7 +13,7 @@ export default function Home() {
           <h2 className="text-2xl font-bold text-gray-800">
             Tableau de bord
           </h2>
-          <LoginButton />
+          {/* <LoginButton /> */}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">

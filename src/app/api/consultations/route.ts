@@ -26,8 +26,11 @@ return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 try {
 const body = await request.json();
 const user = await prisma.user.findUnique({
-where: { email: session.user?.email! },
+  where: { email: session.user?.email as string },
 });
+if (!user) {
+  return NextResponse.json({ error: "Utilisateur non trouvé" }, { status: 404 });
+}
 const consultation = await prisma.consultation.create({
 data: {
 patientId: body.patientId,
