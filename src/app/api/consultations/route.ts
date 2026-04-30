@@ -46,3 +46,6 @@ return NextResponse.json(consultation, { status: 201 });
 return NextResponse.json({ error: "Erreur lors de la création" }, { status: 500 });
 }
 }
+
+
+// skâ
