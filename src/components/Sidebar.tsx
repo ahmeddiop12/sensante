@@ -4,12 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const liens = [
-  { nom: "Accueil",       href: "/",              icone: "H" },
-  { nom: "Patients",      href: "/patients",      icone: "P" },
+  { nom: "Accueil", href: "/", icone: "H" },
+  { nom: "Patients", href: "/patients", icone: "P" },
   { nom: "Consultations", href: "/consultations", icone: "C" },
-  { nom: "Dashboard",     href: "/dashboard",     icone: "D" },
-  { nom: "Profil",        href: "/profil",        icone: "U" },
-  { nom: "IA",            href: "/ia",            icone: "A" },
+  { nom: "Dashboard", href: "/dashboard", icone: "D" },
+  { nom: "Profil", href: "/profil", icone: "U" },
+  // { nom: "IA",            href: "/ia",            icone: "A" },
 ];
 
 export default function Sidebar() {
