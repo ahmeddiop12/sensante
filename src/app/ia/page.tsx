@@ -1,3 +1,4 @@
+//a
 import AlerteIA from "@/components/AlerteIA";
 
 export default function IAPage() {
