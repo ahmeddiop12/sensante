@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ConsultationForm from "@/components/ConsultationForm";
-
+import DiagnosticIA from "@/components/DiagnosticIA";
 interface Consultation {
   id: number;
   date: string;
@@ -23,33 +23,33 @@ export default function ConsultationsPage() {
   const [loading, setLoading] = useState(true);
 
   async function charger() {
-  try {
-    // Vérifier la session avant de fetcher
-    const sessionRes = await fetch("/api/auth/session");
-    const session = await sessionRes.json();
+    try {
+      // Vérifier la session avant de fetcher
+      const sessionRes = await fetch("/api/auth/session");
+      const session = await sessionRes.json();
 
-    if (!session?.user) {
-      console.error("Pas de session active");
-      setLoading(false);
-      return;
-    }
+      if (!session?.user) {
+        console.error("Pas de session active");
+        setLoading(false);
+        return;
+      }
 
-    const res = await fetch("/api/consultations");
-    const data = await res.json();
+      const res = await fetch("/api/consultations");
+      const data = await res.json();
 
-    if (Array.isArray(data)) {
-      setConsultations(data);
-    } else {
-      console.error("Format invalide :", data);
+      if (Array.isArray(data)) {
+        setConsultations(data);
+      } else {
+        console.error("Format invalide :", data);
+        setConsultations([]);
+      }
+    } catch (error) {
+      console.error("Erreur :", error);
       setConsultations([]);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Erreur :", error);
-    setConsultations([]);
-  } finally {
-    setLoading(false);
   }
-}
 
   useEffect(() => {
     charger();
@@ -92,11 +92,10 @@ export default function ConsultationsPage() {
                 </div>
 
                 <span
-                  className={`text-xs px-3 py-1 rounded-full ${
-                    c.statut === "termine"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-yellow-100 text-yellow-700"
-                  }`}
+                  className={`text-xs px-3 py-1 rounded-full ${c.statut === "termine"
+                    ? "bg-green-100 text-green-700"
+                    : "bg-yellow-100 text-yellow-700"
+                    }`}
                 >
                   {c.statut === "termine" ? "Terminé" : "En attente"}
                 </span>
@@ -119,20 +118,12 @@ export default function ConsultationsPage() {
                 </p>
               )}
 
-              {c.diagnosticIa ? (
-                <div className="mt-3 p-3 bg-red-50 rounded-lg">
-                  <p className="text-sm font-bold text-red-700">
-                    Diagnostic IA : {c.diagnosticIa}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    Confiance : {c.confiance}%
-                  </p>
-                </div>
-              ) : (
-                <p className="text-xs text-gray-400 mt-3 italic">
-                  Diagnostic IA en attente (Lab IA — v0.5)
-                </p>
-              )}
+              <DiagnosticIA
+                consultationId={c.id}
+                diagnosticExistant={c.diagnosticIa}
+                confianceExistante={c.confiance}
+                onDiagnostic={charger}
+              />
             </div>
           ))}
         </div>
