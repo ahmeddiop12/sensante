@@ -177,7 +177,7 @@ export default function DashboardPage() {
                   dataKey="total"
                   nameKey="region"
                   cx="50%"
-                  cy="50%"
+                  cy="48%"
                   outerRadius={90}
                   label={renderPieLabel}
                 >
