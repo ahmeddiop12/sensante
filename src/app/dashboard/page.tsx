@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import StatCard from "@/components/StatCard";
+import { LayoutGrid, Loader2, AlertCircle, Brain, Calendar, ShieldAlert } from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -40,24 +41,21 @@ interface Stats {
 // ── Constantes ───────────────────────────────────────────────────────────────
 
 const COULEURS_PIE = [
-  "#0088FE",
-  "#00C49F",
-  "#FFBB28",
-  "#FF8042",
-  "#8884D8",
-  "#82CA9D",
+  "#0d9488", // teal-600
+  "#f97316", // orange-500
+  "#7c3aed", // violet-600
+  "#4f46e5", // indigo-600
+  "#d97706", // amber-600
+  "#e11d48", // rose-600
 ];
 
 // ── Label personnalisé pour le PieChart ──────────────────────────────────────
-// On crée un composant séparé pour éviter les conflits de types Recharts
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const renderPieLabel = (props: any): string => {
   const { name, percent } = props;
   return `${name ?? ""} (${(((percent as number) ?? 0) * 100).toFixed(0)}%)`;
 };
 
 // ── Formatter Tooltip ────────────────────────────────────────────────────────
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const tooltipFormatter = (value: any): [string] => {
   return [`${value} patients`];
 };
@@ -72,7 +70,7 @@ export default function DashboardPage() {
   useEffect(() => {
     fetch("/api/stats")
       .then((res) => {
-        if (!res.ok) throw new Error("Erreur lors du chargement des stats");
+        if (!res.ok) throw new Error("Erreur lors du chargement des statistiques.");
         return res.json();
       })
       .then((data: Stats) => {
@@ -87,18 +85,19 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-gray-500 text-lg animate-pulse">
-          Chargement du dashboard…
-        </p>
+      <div className="flex flex-col items-center justify-center py-24 gap-3 max-w-7xl mx-auto">
+        <Loader2 className="w-10 h-10 animate-spin text-teal-605" />
+        <p className="text-sm text-slate-405 font-medium">Chargement des données du tableau de bord...</p>
       </div>
     );
   }
 
   if (erreur) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-red-500">{erreur}</p>
+      <div className="max-w-md mx-auto my-12 bg-rose-50 border border-rose-200 rounded-2xl p-6 text-center space-y-3">
+        <AlertCircle className="w-10 h-10 text-rose-600 mx-auto" />
+        <h3 className="font-bold text-rose-800">Une erreur est survenue</h3>
+        <p className="text-sm text-rose-700">{erreur}</p>
       </div>
     );
   }
@@ -106,69 +105,78 @@ export default function DashboardPage() {
   if (!stats) return null;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">
-        Tableau de bord — SénSanté
-      </h1>
+    <div className="max-w-7xl mx-auto space-y-8">
+      {/* En-tête */}
+      <div>
+        <h1 className="text-2xl font-extrabold text-slate-805 tracking-tight flex items-center gap-2.5">
+          <LayoutGrid className="w-7 h-7 text-teal-650" />
+          <span>Statistiques & Analyses</span>
+        </h1>
+        <p className="text-sm text-slate-405 mt-1">Consultez les indicateurs clés et l'activité de santé communautaire en temps réel.</p>
+      </div>
 
-      {/* ── Zone 1 : KPI ───────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      {/* Zone 1 : KPI */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <StatCard
           titre="Patients"
           valeur={stats.kpi.totalPatients}
-          unite="enregistrés"
-          couleur="border-teal-500"
+          unite="dossiers enregistrés"
         />
         <StatCard
           titre="Consultations"
           valeur={stats.kpi.totalConsultations}
-          unite="au total"
-          couleur="border-orange-500"
+          unite="réalisées au total"
         />
         <StatCard
           titre="Diagnostics IA"
           valeur={stats.kpi.consultationsTerminees}
-          unite="terminés"
-          couleur="border-purple-500"
+          unite="analyses complétées"
         />
         <StatCard
           titre="Alertes"
           valeur={stats.kpi.alertesUrgentes}
-          unite="urgentes"
-          couleur="border-red-500"
+          unite="cas urgents IA"
         />
       </div>
 
-      {/* ── Zone 2 & 4 : Graphiques côte à côte ────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-
-        {/* Graphique en barres — consultations par mois */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">
-            Consultations par mois
+      {/* Zone 2 & 4 : Graphiques côte à côte */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Graphique consultations par mois */}
+        <div className="glass-card rounded-2xl p-6 shadow-sm border border-slate-100/60">
+          <h2 className="text-base font-bold text-slate-800 mb-6 flex items-center gap-2">
+            <span className="w-1.5 h-4.5 rounded bg-orange-500" />
+            Évolution mensuelle des consultations
           </h2>
           {stats.parMois.length === 0 ? (
-            <p className="text-gray-400 text-sm">Aucune donnée disponible.</p>
+            <div className="h-[250px] flex items-center justify-center">
+              <p className="text-slate-400 text-xs font-medium">Aucune donnée disponible.</p>
+            </div>
           ) : (
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={stats.parMois}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="mois" tick={{ fontSize: 12 }} />
-                <YAxis allowDecimals={false} />
-                <Tooltip />
-                <Bar dataKey="total" fill="#E65100" radius={[4, 4, 0, 0]} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis dataKey="mois" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+                <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: 'rgba(255,255,255,0.95)', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05)' }} 
+                  labelStyle={{ fontWeight: 'bold', fontSize: '12px', color: '#1e293b' }}
+                />
+                <Bar dataKey="total" fill="#f97316" radius={[6, 6, 0, 0]} barSize={36} />
               </BarChart>
             </ResponsiveContainer>
           )}
         </div>
 
         {/* Graphique camembert — patients par région */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">
-            Patients par région
+        <div className="glass-card rounded-2xl p-6 shadow-sm border border-slate-100/60">
+          <h2 className="text-base font-bold text-slate-800 mb-6 flex items-center gap-2">
+            <span className="w-1.5 h-4.5 rounded bg-teal-600" />
+            Répartition géographique des patients
           </h2>
           {stats.parRegion.length === 0 ? (
-            <p className="text-gray-400 text-sm">Aucune donnée disponible.</p>
+            <div className="h-[250px] flex items-center justify-center">
+              <p className="text-slate-400 text-xs font-medium">Aucune donnée disponible.</p>
+            </div>
           ) : (
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
@@ -177,8 +185,10 @@ export default function DashboardPage() {
                   dataKey="total"
                   nameKey="region"
                   cx="50%"
-                  cy="48%"
-                  outerRadius={90}
+                  cy="45%"
+                  outerRadius={80}
+                  innerRadius={45}
+                  paddingAngle={2}
                   label={renderPieLabel}
                 >
                   {stats.parRegion.map((_, i) => (
@@ -188,60 +198,62 @@ export default function DashboardPage() {
                     />
                   ))}
                 </Pie>
-                <Tooltip formatter={tooltipFormatter} />
-                <Legend />
+                <Tooltip 
+                  formatter={tooltipFormatter}
+                  contentStyle={{ backgroundColor: 'rgba(255,255,255,0.95)', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05)' }} 
+                />
+                <Legend iconType="circle" wrapperStyle={{ fontSize: '11px', marginTop: '10px' }} />
               </PieChart>
             </ResponsiveContainer>
           )}
         </div>
       </div>
 
-      {/* ── Zone 3 : Derniers diagnostics IA ───────────────────────────────── */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-lg font-semibold text-gray-700 mb-4">
-          Derniers diagnostics IA
+      {/* Zone 3 : Derniers diagnostics IA */}
+      <div className="glass-card rounded-2xl p-6 shadow-sm border border-slate-100/60">
+        <h2 className="text-base font-bold text-slate-800 mb-6 flex items-center gap-2">
+          <Brain className="w-5 h-5 text-purple-650" />
+          <span>Dernières observations IA générées</span>
         </h2>
 
         {stats.dernieresAlertes.length === 0 ? (
-          <p className="text-gray-400 text-sm">
-            Aucun diagnostic disponible pour le moment.
-          </p>
+          <div className="p-8 text-center bg-slate-50/50 rounded-xl border border-slate-200/50">
+            <p className="text-slate-455 text-sm font-medium">Aucune observation disponible pour le moment.</p>
+          </div>
         ) : (
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {stats.dernieresAlertes.map((a) => (
               <div
                 key={a.id}
-                className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                className="p-4 rounded-xl border border-slate-100 bg-slate-50/30 hover:bg-slate-50/65 transition-colors flex flex-col justify-between gap-3 shadow-inner"
               >
-                {/* Infos patient */}
-                <div>
-                  <p className="font-semibold text-gray-800">{a.patient}</p>
-                  <p className="text-sm text-gray-500">
-                    {a.region} —{" "}
-                    {new Date(a.date).toLocaleDateString("fr-FR")}
-                  </p>
-                </div>
-
-                {/* Diagnostic + confiance */}
-                <div className="text-right">
-                  <p className="text-sm text-gray-700 max-w-xs truncate">
-                    {a.diagnostic
-                      ? a.diagnostic.substring(0, 60) + "…"
-                      : "—"}
-                  </p>
+                <div className="flex justify-between items-start gap-4">
+                  <div>
+                    <p className="font-bold text-slate-800 text-sm">{a.patient}</p>
+                    <div className="flex items-center gap-1.5 text-[10px] text-slate-400 mt-0.5">
+                      <Calendar className="w-3.5 h-3.5" />
+                      <span>{a.region} — {new Date(a.date).toLocaleDateString("fr-FR")}</span>
+                    </div>
+                  </div>
                   {a.confiance !== null && (
                     <span
-                      className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                        a.confiance >= 80
-                          ? "bg-red-100 text-red-700"
+                      className={`text-[9px] font-extrabold px-2.5 py-0.5 rounded-full border uppercase tracking-wider ${
+                        a.confiance >= 85
+                          ? "bg-rose-100 text-rose-700 border-rose-200"
                           : a.confiance >= 60
-                          ? "bg-orange-100 text-orange-700"
-                          : "bg-green-100 text-green-700"
+                          ? "bg-amber-100 text-amber-700 border-amber-200"
+                          : "bg-emerald-100 text-emerald-700 border-emerald-200"
                       }`}
                     >
                       Confiance : {a.confiance}%
                     </span>
                   )}
+                </div>
+
+                <div className="bg-white/60 p-3 rounded-lg border border-slate-200/40">
+                  <p className="text-xs text-slate-705 leading-relaxed font-medium line-clamp-2">
+                    {a.diagnostic || "Analyse clinique brute."}
+                  </p>
                 </div>
               </div>
             ))}
