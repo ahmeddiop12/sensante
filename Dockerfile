@@ -1,5 +1,8 @@
-# 1. Image de base : Node.js 20 sur Alpine Linux
-FROM node:20-alpine
+# 1. Image de base : Node.js 20 sur Debian slim
+FROM node:20-slim
+
+# Installer openssl et curl (nécessaires pour Prisma et les outils de debug)
+RUN apt-get update -y && apt-get install -y openssl curl
 
 # 2. Répertoire de travail dans le conteneur
 WORKDIR /app
@@ -28,3 +31,4 @@ EXPOSE 3000
 
 # 10. Commande de démarrage
 CMD ["npm", "start"]
+

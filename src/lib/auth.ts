@@ -12,24 +12,31 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Mot de passe", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
+        const email = credentials?.email?.trim().toLowerCase();
+        const password = credentials?.password;
+
+        if (!email || !password) return null;
+
+        try {
+          console.info('🔐 authorize – email reçu :', email);
+          const user = await prisma.user.findUnique({ where: { email } });
+          console.info('🔐 authorize – utilisateur trouvé :', user);
+          if (!user) return null;
+
+          const passwordMatch = await bcrypt.compare(password, user.password);
+          console.info('🔐 authorize – passwordMatch :', passwordMatch);
+          if (!passwordMatch) return null;
+
+          return {
+            id: String(user.id),
+            email: user.email,
+            name: `${user.prenom} ${user.nom}`,
+            role: user.role,
+          };
+        } catch (error) {
+          console.error("Erreur authorize NextAuth:", error);
           return null;
         }
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        });
-        if (!user) return null;
-        const passwordMatch = await bcrypt.compare(
-          credentials.password,
-          user.password
-        );
-        if (!passwordMatch) return null;
-        return {
-          id: String(user.id),
-          email: user.email,
-          name: `${user.prenom} ${user.nom}`,
-          role: user.role,
-        };
       },
     }),
   ],
