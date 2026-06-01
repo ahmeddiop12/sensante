@@ -24,6 +24,7 @@ export default function ConsultationsPage() {
   const [consultations, setConsultations] = useState<Consultation[]>([]);
   const [loading, setLoading] = useState(true);
   const [recherche, setRecherche] = useState("");
+  const [filtreStatut, setFiltreStatut] = useState<"tous" | "en_attente" | "termine">("tous");
 
   async function charger() {
     try {
@@ -60,9 +61,14 @@ export default function ConsultationsPage() {
   const consultationsFiltrees = consultations.filter((c) => {
     const nomComplet = `${c.patient.prenom} ${c.patient.nom}`.toLowerCase();
     const query = recherche.toLowerCase();
-    const matchesPatient = nomComplet.includes(query) || c.patient.region.toLowerCase().includes(query);
-    const matchesSymptomes = c.symptomes.some((s) => s.toLowerCase().includes(query));
-    return matchesPatient || matchesSymptomes;
+    
+    const matchesRecherche = nomComplet.includes(query) || 
+                            c.patient.region.toLowerCase().includes(query) ||
+                            c.symptomes.some((s) => s.toLowerCase().includes(query));
+    
+    const matchesStatut = filtreStatut === "tous" || c.statut === filtreStatut;
+
+    return matchesRecherche && matchesStatut;
   });
 
   return (
@@ -87,22 +93,57 @@ export default function ConsultationsPage() {
 
         {/* Liste à droite */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="flex items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-            <div className="relative flex-1">
+          <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+            <div className="relative">
               <input
                 type="text"
                 placeholder="Rechercher par patient, région ou symptôme..."
                 value={recherche}
                 onChange={(e) => setRecherche(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl text-sm text-slate-800 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none bg-slate-50/50 focus:bg-white transition-all"
+                className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-800 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none bg-slate-50/50 focus:bg-white transition-all"
               />
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setFiltreStatut("tous")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                  filtreStatut === "tous"
+                    ? "bg-slate-800 text-white shadow-md shadow-slate-200"
+                    : "bg-slate-50 text-slate-500 hover:bg-slate-100 border border-slate-200"
+                }`}
+              >
+                Toutes ({consultations.length})
+              </button>
+              <button
+                onClick={() => setFiltreStatut("en_attente")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                  filtreStatut === "en_attente"
+                    ? "bg-amber-500 text-white shadow-md shadow-amber-200"
+                    : "bg-amber-50 text-amber-600 hover:bg-amber-100 border border-amber-100"
+                }`}
+              >
+                <AlertCircle className="w-3.5 h-3.5" />
+                À analyser ({consultations.filter(c => c.statut === "en_attente").length})
+              </button>
+              <button
+                onClick={() => setFiltreStatut("termine")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                  filtreStatut === "termine"
+                    ? "bg-emerald-600 text-white shadow-md shadow-emerald-200"
+                    : "bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-100"
+                }`}
+              >
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                Déjà analysées ({consultations.filter(c => c.statut === "termine").length})
+              </button>
             </div>
           </div>
 
           <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
             <Activity className="w-4.5 h-4.5 text-slate-500" />
-            <span>Historique des consultations ({consultationsFiltrees.length})</span>
+            <span>Historique ({consultationsFiltrees.length})</span>
           </h2>
 
           {loading ? (

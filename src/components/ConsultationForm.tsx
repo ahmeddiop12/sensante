@@ -96,14 +96,16 @@ export default function ConsultationForm({
 
       {/* Patient */}
       <div className="space-y-2">
-        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">Patient concerné</label>
+        <label htmlFor="patient-select" className="block text-xs font-bold uppercase tracking-wider text-slate-400 cursor-pointer">
+          Patient concerné
+        </label>
         <div className="relative">
-          <select 
-            name="patientId" 
-            required 
+          <select
+            id="patient-select"
+            name="patientId"
+            required
             className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-800 bg-white/50 focus:bg-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none transition-all appearance-none"
-          >
-            <option value="">Sélectionner un patient dans la liste</option>
+          >            <option value="">Sélectionner un patient dans la liste</option>
             {Array.isArray(patients) && patients.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.prenom} {p.nom} — {p.region}

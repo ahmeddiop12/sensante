@@ -87,53 +87,77 @@ export default function PatientForm({
         </div>
 
         {/* Date de Naissance */}
-        <div className="relative">
-          <input
-            name="dateNaissance"
-            type="date"
-            required
-            className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-800 bg-white/50 focus:bg-white focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none transition-all"
-          />
-          <Calendar className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
+        <div className="space-y-1.5">
+          <label htmlFor="dateNaissance" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 ml-1">
+            Date de Naissance
+          </label>
+          <div className="relative">
+            <input
+              id="dateNaissance"
+              name="dateNaissance"
+              type="date"
+              required
+              className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-800 bg-white/50 focus:bg-white focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none transition-all"
+            />
+            <Calendar className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
+          </div>
         </div>
 
         {/* Sexe */}
-        <div className="relative">
-          <select
-            name="sexe"
-            required
-            className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-800 bg-white/50 focus:bg-white focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none transition-all appearance-none"
-          >
-            <option value="">Sélectionner le Sexe</option>
-            <option value="F">Femme</option>
-            <option value="M">Homme</option>
-          </select>
-          <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5 pointer-events-none" />
+        <div className="space-y-1.5">
+          <label htmlFor="sexe-select" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 ml-1">
+            Sexe
+          </label>
+          <div className="relative">
+            <select
+              id="sexe-select"
+              name="sexe"
+              required
+              className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-800 bg-white/50 focus:bg-white focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none transition-all appearance-none"
+            >
+              <option value="">Sélectionner le Sexe</option>
+              <option value="F">Femme</option>
+              <option value="M">Homme</option>
+            </select>
+            <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5 pointer-events-none" />
+          </div>
         </div>
 
         {/* Téléphone */}
-        <div className="relative">
-          <input
-            name="telephone"
-            placeholder="Numéro de téléphone (optionnel)"
-            className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-800 bg-white/50 focus:bg-white focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none transition-all"
-          />
-          <Phone className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
+        <div className="space-y-1.5">
+          <label htmlFor="telephone" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 ml-1">
+            Téléphone
+          </label>
+          <div className="relative">
+            <input
+              id="telephone"
+              name="telephone"
+              placeholder="Numéro de téléphone (optionnel)"
+              className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-800 bg-white/50 focus:bg-white focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none transition-all"
+            />
+            <Phone className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
+          </div>
         </div>
 
         {/* Région */}
-        <div className="relative">
-          <select
-            name="region"
-            required
-            className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-800 bg-white/50 focus:bg-white focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none transition-all appearance-none"
-          >
-            <option value="">Sélectionner la Région</option>
-            {regions.map((r) => (
-              <option key={r} value={r}>{r}</option>
-            ))}
-          </select>
-          <MapPin className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5 pointer-events-none" />
+        <div className="space-y-1.5">
+          <label htmlFor="region-select" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 ml-1">
+            Région
+          </label>
+          <div className="relative">
+            <select
+              id="region-select"
+              name="region"
+              required
+              className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-800 bg-white/50 focus:bg-white focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none transition-all appearance-none"
+            >
+              <option value="">Sélectionner la Région</option>
+              {regions.map((r) => (
+                <option key={r} value={r}>{r}</option>
+              ))}
+            </select>
+            <MapPin className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5 pointer-events-none" />
+          </div>
         </div>
       </div>
 
